@@ -332,8 +332,9 @@ public class {this.classNameTextBox.Text}" + @"
             textBox.Text = csCode;
             textBox.ScrollBars = ScrollBars.Both;
             form.Controls.Add(textBox);
-            form.Select();
+            //form.Select();
             form.Show();
+
         }
         #endregion
         #region ChangeButton_Click

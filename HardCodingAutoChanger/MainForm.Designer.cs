@@ -204,7 +204,7 @@
             this.prefixTextBox.Name = "prefixTextBox";
             this.prefixTextBox.Size = new System.Drawing.Size(302, 26);
             this.prefixTextBox.TabIndex = 11;
-            this.prefixTextBox.Text = "Test_";
+            this.prefixTextBox.Text = "TEST_";
             // 
             // label1
             // 
@@ -253,6 +253,7 @@
             // MainForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(1315, 649);
             this.Controls.Add(this.bottomPanel);
             this.Controls.Add(this.topPanel);
