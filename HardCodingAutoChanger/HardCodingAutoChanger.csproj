@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Constant.cs" />
     <Compile Include="Keyword.cs" />
     <Compile Include="KeywordListDictionary.cs" />
     <Compile Include="MainForm.cs">

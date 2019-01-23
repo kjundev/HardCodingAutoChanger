@@ -31,6 +31,10 @@ namespace HardCodingAutoChanger
         /// 
         /// </summary>
         private  string quote = "\"";
+
+        string subKey = @"SOFTWARE\Wow6432Node\Microsoft\Windows NT\CurrentVersion";
+        Microsoft.Win32.RegistryKey key = Microsoft.Win32.Registry.LocalMachine;
+        
         #endregion
 
         #region MainForm
@@ -41,6 +45,15 @@ namespace HardCodingAutoChanger
         public MainForm()
         {
             InitializeComponent();
+
+            // RichTextBox 에 검색된 인덱스 표시할 경우 윈도우 10 은 +1 을 해야하고 7은 하지않는다.
+            Microsoft.Win32.RegistryKey skey = key.OpenSubKey(subKey);
+            string name = skey.GetValue("ProductName").ToString();
+            
+            if (name.Contains("7"))
+            {
+                Constant.PlusIndex = 0;
+            }
 
             this.textRichTextBox.Text = @"
 using System.Collections.Generic;
@@ -310,16 +323,17 @@ public class {this.classNameTextBox.Text}" + @"
             foreach (var item in this.keywordListBox.Items)
             {
                 Keyword keyword = item as Keyword;
-                
-                if (!fieldNameList.Contains($"{this.prefixTextBox.Text}{keyword.Text.Replace(quote, "")}"))
+                string fieldName = $"{this.prefixTextBox.Text}{keyword.Text.Replace(quote, "").Replace("/","")}";
+
+                if (!fieldNameList.Contains(fieldName))
                 {
                     csCode += $@"
         /// <summary>
         /// {keyword.Text}
         /// </summary>
-        public static readonly string {this.prefixTextBox.Text}{keyword.Text.Replace(quote, "")} = {keyword.Text};";
+        public static readonly string {fieldName} = {keyword.Text};";
 
-                    fieldNameList.Add($"{this.prefixTextBox.Text}{keyword.Text.Replace(quote, "")}");
+                    fieldNameList.Add(fieldName);
                 }
             }
 
@@ -328,9 +342,9 @@ public class {this.classNameTextBox.Text}" + @"
 
             Form form = new Form() { Width = 800, Height = 600 };
             form.WindowState = FormWindowState.Normal;
-            TextBox textBox = new TextBox() { Multiline = true, Dock = DockStyle.Fill };
+            RichTextBox textBox = new RichTextBox() { Multiline = true, Dock = DockStyle.Fill };
             textBox.Text = csCode;
-            textBox.ScrollBars = ScrollBars.Both;
+            textBox.ScrollBars = RichTextBoxScrollBars.Both;
             form.Controls.Add(textBox);
             //form.Select();
             form.Show();
@@ -348,12 +362,12 @@ public class {this.classNameTextBox.Text}" + @"
             for (int index = this.keywordListBox.Items.Count - 1; index >= 0; index--)
             {
                 Keyword keyword = this.keywordListBox.Items[index] as Keyword;
-
+                string fieldName = $"{this.prefixTextBox.Text}{keyword.Text.Replace(quote, "").Replace("/", "")}";
                 ritchTextBox.Select(keyword.Index, keyword.Length);
                 ritchTextBox.SelectionColor = Color.White;
                 ritchTextBox.SelectionBackColor = Color.Black;
 
-                ritchTextBox.SelectedText = $"{this.classNameTextBox.Text}.{this.prefixTextBox.Text}{keyword.Text.Replace(quote,"")}";
+                ritchTextBox.SelectedText = $"{this.classNameTextBox.Text}.{fieldName}";
 
                 //ritchTextBox.Text.Insert(ritchTextBox.SelectionStart, $"{this.classNameTextBox.Text}.{this.prefixTextBox.Text}{keyword.Text.Replace(quote, "")}");
             }
